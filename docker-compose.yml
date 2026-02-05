@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  bot:
+    container_name: manajemen_bot
+    build: .
+    restart: always
+    volumes:
+      - .:/app
+    environment:
+      - TZ=Asia/Jakarta
