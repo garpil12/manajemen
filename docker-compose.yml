@@ -1,10 +1,13 @@
 version: "3.9"
+
 services:
   bot:
     container_name: manajemen_bot
     build: .
     restart: always
+    working_dir: /app
+    command: python main.py
+    environment:
+      TZ: Asia/Jakarta
     volumes:
       - .:/app
-    environment:
-      - TZ=Asia/Jakarta
