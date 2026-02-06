@@ -4,18 +4,20 @@ import sys
 import signal
 import importlib
 import platform
-from pyrogram import Client, filters
+from pyrogram import Client, filters, idle
 
 import config
 from logger import setup_logger
 from antiflood import is_flood
 from error_handler import register_error_handler
 
+FLAG_FILE = "bot_running.flag"
+
 # ================= LOGGER =================
 log = setup_logger("MAIN")
 
 # ================= VALIDATE CONFIG =================
-REQUIRED_CONFIG = ["API_ID", "API_HASH", "BOT_TOKEN", "SESSION"]
+REQUIRED_CONFIG = ["API_ID", "API_HASH", "SESSION"]
 
 for key in REQUIRED_CONFIG:
     if not hasattr(config, key):
@@ -64,9 +66,19 @@ async def global_antiflood(client, message):
     except Exception:
         pass
 
+# ================= HEALTHCHECK FLAG =================
+def mark_running():
+    with open(FLAG_FILE, "w") as f:
+        f.write("ok")
+
+def mark_stopped():
+    if os.path.exists(FLAG_FILE):
+        os.remove(FLAG_FILE)
+
 # ================= GRACEFUL SHUTDOWN =================
 def shutdown_handler(sig, frame):
     log.warning(f"Shutdown signal received: {sig}")
+    mark_stopped()
     try:
         app.stop()
     finally:
@@ -88,7 +100,9 @@ if __name__ == "__main__":
         load_modules()
         register_error_handler(app)
 
-        app.run()
+        app.start()          # ⬅️ bot connect Telegram
+        mark_running()       # ⬅️ FLAG DIBUAT DI SINI (AMAN)
+        idle()               # ⬅️ tahan process
 
     except KeyboardInterrupt:
         log.warning("Bot dihentikan manual (CTRL+C)")
@@ -96,4 +110,7 @@ if __name__ == "__main__":
     except Exception as e:
         log.critical("🔥 BOT CRASH !!!")
         log.exception(e)
-        sys.exit(1)
+
+    finally:
+        mark_stopped()
+        app.stop()
