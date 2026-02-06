@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Env
+venv/
+.env
+
+# Pyrogram / Telegram
+*.session
+*.session-journal
+
+# Config & Secrets
+config.py
+
+# Logs
+logs/
+*.log
+
+# Database & Backup
+*.db
+*.json
+backup/
+backups/
+
+# Docker
+*.pid
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
