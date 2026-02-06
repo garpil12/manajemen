@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Virtual Env
+# Virtual Env & ENV
 venv/
 .env
 
@@ -27,6 +27,10 @@ backups/
 # Docker
 *.pid
 .dockerignore
+
+# Editor
+.vscode/
+.idea/
 
 # OS
 .DS_Store
