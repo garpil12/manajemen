@@ -1,13 +1,20 @@
-version: "3.9"
+lversion: "3.9"
 
 services:
   bot:
     container_name: manajemen_bot
     build: .
     restart: always
-    working_dir: /app
-    command: python main.py
-    environment:
-      TZ: Asia/Jakarta
+    env_file:
+      - .env
     volumes:
       - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - TZ=Asia/Jakarta
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 512M
